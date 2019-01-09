@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@jupyterlab/docmanager": "^0.19.1",
+    "@jupyterlab/notebook": "^0.19.2"
+  }
+}
