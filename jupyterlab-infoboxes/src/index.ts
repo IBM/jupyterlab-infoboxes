@@ -2,30 +2,36 @@ import {
   JupyterLab, JupyterLabPlugin
 } from '@jupyterlab/application';
 
-import { // probably can remove this
-  IDocumentManager
-} from '@jupyterlab/docmanager';
-
 import {
   INotebookTracker
 } from '@jupyterlab/notebook';
 
+import * as showdown from 'showdown';
+
 import '../style/index.css';
+
+const converter = new showdown.Converter();
 
 function createInfoBox(): Promise<Node> {
   return new Promise((resolve, reject) => {
-      // stand in for function that gets infobox from somewhere
-      setTimeout(() => {
-        var infoBox = document.createElement('div');
-        infoBox.className = "jupyterlab-infoboxes p-Widget jp-Cell jp-CodeCell jp-RenderedHTMLCommon jp-RenderedMarkdown";
-        infoBox.innerHTML = `<em>Did you know?</em> IBM Watson Studio lets you build and deploy an AI solution, using the best of open source and IBM software and giving your team a single environment to work in. Learn more at <a href="https://cocl.us/ibm_watson_studio_infobox">https://cocl.us/ibm_watson_studio_infobox</a>`;
-        resolve(infoBox);
-      }, 300)
+      
+      fetch('https://raw.githubusercontent.com/cognitive-class/jupyterlab-infobox-content/master/content.md').then(response => {
+        return response.text();
+      }).then(markdown => {
+        setTimeout(() => { // hack until I find a better event to call this on
+          var infoBox = document.createElement('div');
+          infoBox.className = "jupyterlab-infoboxes p-Widget jp-Cell jp-CodeCell jp-RenderedHTMLCommon jp-RenderedMarkdown";
+          infoBox.innerHTML = converter.makeHtml(markdown)
+          resolve(infoBox);
+        }, 300);
+        
+      }).catch(error => {
+        console.error(error);
+      })
     })
 }
 
 function isEmptyNotebook(notebook: any): boolean {
-  console.log(notebook.content.model.cells.length);
   return (notebook.content.model.cells.length < 2);
 }
 
@@ -36,19 +42,30 @@ function isEmptyNotebook(notebook: any): boolean {
 const extension: JupyterLabPlugin<void> = {
   id: 'jupyterlab-infoboxes',
   autoStart: true,
-  requires: [IDocumentManager, INotebookTracker],
-  activate: (app: JupyterLab, docmanager: IDocumentManager, notebookTracker: INotebookTracker) => {
-    console.log('JupyterLab extension jupyterlab-infoboxes is activated!');
+  requires: [INotebookTracker],
+  activate: (app: JupyterLab, notebookTracker: INotebookTracker) => {
     
-    notebookTracker.widgetAdded.connect((tracker) => {
-      tracker.forEach((notebook) => {
-        console.log(notebook);
+    // on startup, notebooks may already be open
+    notebookTracker.forEach((notebook) => {
         if (notebook.node.classList.contains("has-jupyterlab-infoboxes")) { 
           return; 
         } else {
           notebook.node.classList.add("has-jupyterlab-infoboxes");
           createInfoBox().then((infoBox) => {
-            console.log('test',notebook.content.model.cells.length);
+            if (isEmptyNotebook(notebook)) {return;};
+            notebook.node.childNodes[1].appendChild(infoBox);
+          })
+        }
+      })
+
+    // handle new notebooks being opened
+    notebookTracker.widgetAdded.connect((tracker) => {
+      tracker.forEach((notebook) => {
+        if (notebook.node.classList.contains("has-jupyterlab-infoboxes")) { 
+          return; 
+        } else {
+          notebook.node.classList.add("has-jupyterlab-infoboxes");
+          createInfoBox().then((infoBox) => {
             if (isEmptyNotebook(notebook)) {return;};
             notebook.node.childNodes[1].appendChild(infoBox);
           })
