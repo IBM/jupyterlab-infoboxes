@@ -25,7 +25,6 @@ function createInfoBox(): Promise<Node> {
         reject("failed to fetch infobox.");
       }
     }).then(url => {
-      console.log(`fetching ${url}`)
       fetch(url).then(response => {
         return response.text();
       }).then(markdown => {
