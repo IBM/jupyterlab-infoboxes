@@ -14,17 +14,29 @@ const converter = new showdown.Converter();
 
 function createInfoBox(): Promise<Node> {
   return new Promise((resolve, reject) => {
-      
-      fetch('https://raw.githubusercontent.com/cognitive-class/jupyterlab-infobox-content/master/content.md').then(response => {
+
+      fetch('https://api.github.com/repos/cognitive-class/jupyterlab-infobox-content/contents/infoboxes').then(response => {
+        return response.json();
+    }).then(infoboxes => {
+      var randomInfobox = infoboxes[Math.floor(Math.random() * infoboxes.length)];
+      if (randomInfobox && randomInfobox.download_url) {
+        return randomInfobox.download_url;
+      } else {
+        reject("failed to fetch infobox.");
+      }
+    }).then(url => {
+      console.log(`fetching ${url}`)
+      fetch(url).then(response => {
         return response.text();
       }).then(markdown => {
         setTimeout(() => { // hack until I find a better event to call this on
-          var infoBox = document.createElement('div');
-          infoBox.className = "jupyterlab-infoboxes p-Widget jp-Cell jp-CodeCell jp-RenderedHTMLCommon jp-RenderedMarkdown";
-          infoBox.innerHTML = converter.makeHtml(markdown)
-          resolve(infoBox);
-        }, 300);
-        
+                var infoBox = document.createElement('div');
+                infoBox.className = "jupyterlab-infoboxes p-Widget jp-Cell jp-CodeCell jp-RenderedHTMLCommon jp-RenderedMarkdown";
+                infoBox.innerHTML = converter.makeHtml(markdown)
+                resolve(infoBox);
+              }, 300);
+            })
+            
       }).catch(error => {
         console.error(error);
       })
