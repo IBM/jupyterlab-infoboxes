@@ -100,13 +100,14 @@ const extension: JupyterLabPlugin<void> = {
             if (isEmptyNotebook(notebook)) {return;};
 
             // randomly decide on a location, and edit the url accordingly
-            
             var r = Math.floor(Math.random()*4);
+
+           
             switch (r) {
               case 0:
                 // option 1: place at the beginning of notebook
-                updateLinkWithLocation(infoBox, "start");
                 notebook.node.childNodes[1].insertBefore(infoBox, notebook.node.childNodes[1].firstChild)
+                updateLinkWithLocation(infoBox, "start");
                 break;
               case 1:
                 // option 2: place at the end of notebook
@@ -120,15 +121,17 @@ const extension: JupyterLabPlugin<void> = {
                 while (!(cellIsATitle((<Element> notebook.node.childNodes[1]).children[insertionPoint]))) {
                   insertionPoint++;
                 }
+                if (insertionPoint === (<Element> notebook.node.childNodes[1]).children.length) { insertionPoint = 0} // display at the beginning by default if we couldn't find a good spot
                 notebook.node.childNodes[1].insertBefore(infoBox, (<Element> notebook.node.childNodes[1]).children[insertionPoint])
                 break;
               case 3:
                 // option 4: place near halfway point
                 updateLinkWithLocation(infoBox, "half");
                 var insertionPoint = Math.floor((<Element> notebook.node.childNodes[1]).children.length/2);
-                while (!(cellIsATitle((<Element> notebook.node.childNodes[1]).children[insertionPoint]))) {
+                while (insertionPoint < (<Element> notebook.node.childNodes[1]).children.length && !(cellIsATitle((<Element> notebook.node.childNodes[1]).children[insertionPoint]))) {
                   insertionPoint++;
                 }
+                if (insertionPoint === (<Element> notebook.node.childNodes[1]).children.length) { insertionPoint = 0} // display at the beginning by default if we couldn't find a good spot
                 notebook.node.childNodes[1].insertBefore(infoBox, (<Element> notebook.node.childNodes[1]).children[insertionPoint])
                 break;
             }
