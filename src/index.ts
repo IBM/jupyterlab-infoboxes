@@ -32,6 +32,9 @@ function createInfoBox(): Promise<Node> {
   return new Promise((resolve, reject) => {
 
       fetch('https://api.github.com/repos/cognitive-class/jupyterlab-infobox-content/contents/infoboxes').then(response => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
         return response.json();
     }).then(infoboxes => {
       var randomInfobox = infoboxes[Math.floor(Math.random() * infoboxes.length)];
