@@ -15,8 +15,12 @@ const converter = new showdown.Converter();
 /**
  * Checks if the html element being passed is a markdown cell containing a title
  */
-function cellIsATitle(cell: Element) {              
-  return cell.children[1].children[1].children.length >= 3 && cell.children[1].children[1].children[2].innerHTML.startsWith("<h")
+function cellIsATitle(cell: Element) {
+  try {
+    return cell.children[1].children[1].children.length >= 3 && cell.children[1].children[1].children[2].innerHTML.startsWith("<h")
+  } catch (err) {
+    return false;
+  }       
 }
 
 /**
