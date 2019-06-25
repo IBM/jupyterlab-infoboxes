@@ -10,6 +10,7 @@ This extension displays infoboxes to Skills Network Labs users in their notebook
 
 ## Development
 
+- activate your conda environment: `conda activate jupyterlab-infoboxes`
 - install dependencies and build: `yarn install && yarn run build`
 - install the lab extension: `jupyter labextension link .`
 - To watch and automatically rebuild the lab extension run `yarn run watch`
