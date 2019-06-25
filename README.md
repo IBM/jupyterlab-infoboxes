@@ -1,9 +1,9 @@
 # jupyterlab-infoboxes
 A JupyterLab extension that displays IBM Cloud offerings and other promotional material in JupyterLab notebooks.
 
-Insert Infoboxes into JupyterLab Notebooks
+This extension displays infoboxes to Skills Network Labs users in their notebooks. The infoboxes are markdown snippets chosen at random from [the files in this repo's infoboxes directory](https://github.com/cognitive-class/jupyterlab-infobox-content/tree/master/infoboxes).
 
-# Initial Setup
+## Initial Setup
 
 - Create a conda environment for developing this extension: `conda create -n jupyterlab-infoboxes -y && conda activate jupyterlab-infoboxes`
 - install jupyterlab: `pip install jupyterlab==1.0.0rc.0` #`conda install jupyterlab`
