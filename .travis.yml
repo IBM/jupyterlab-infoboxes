@@ -1,0 +1,21 @@
+language: node_js
+node_js: '8'
+cache: yarn
+install:
+  - yarn install
+  - yarn run build
+deploy:
+  # provider: npm doesn't work for some reason :(
+  - provider: script
+    skip_cleanup: true
+    script: "cp .npmrc.template $HOME/.npmrc && npm publish"
+    on:
+      repo: cognitive-class-labs/jupyterlab-infoboxes
+      tags: true
+notifications:
+  email: false
+  slack:
+    on_pull_requests: false
+    on_failure: "change"
+    on_success: "change"
+    secure: "RQl41vX2w5mS99LyTGgdFcDfFer332thTc/bq4Rm6BGcd9fjL88IFJHTCvdt6iFEQB6h8DclPl2e6UKkGSTi8WpCk9GvaSliIr35ZNZqTig5IaAUQFeaUtcDPLZXlumgFL6zZ0P58qbWLZo3ZEAaTyoeNdRy2aCmsHVFS7EldbwRunakx9JO98Qm9zU4LbYhFSwvmajOffGjNF/+8eJWnYJhjgg61Sv3P90LX/jyM2p/NAAZA52mIIXp2KRJbGJQBK81QL+G2jZgXFvaWj8o2SbADiW1qOGw4krgerXNffO5Uir7wvWQ9YXHMRrn6A82+fzC9v4tOo8ZwgT4wcHJ+UgXkihghyuZpW0Ma5OlhYfvzLjbOZ3XScEyt3sDvlBdZBd9Sm5oE0m//0Qyaa4n7rvtwcnOdMYy3eWgr2R2gH+/3W3xFNZTU+9Giyksntlk/PDYzsQstah20NkV85SZ/Hxh+nxoroqnhLO8U99/+HpqoveiEHo2vYuxOvMSZLnuHD9+U+xo8Z8XAZybZsvZba9pKwxzWtf5aFC1SnkSNClDFJ0Zdd1N22O0Hp1ouKdXccAUEOP/Y9kieX2Eg5UKMpjPk+bnzcVXNJc4kd5ncp4A0cTUUUBzel0UJNuaqS1c+fnxPJokmq9DGoMhABNSCTRDB8g0nr8rYF+zu76MOFM=" # pragma: whitelist secret
