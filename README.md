@@ -6,7 +6,7 @@ This extension displays infoboxes to Skills Network Labs users in their notebook
 ## Initial Setup
 
 - Create a conda environment for developing this extension: `conda create -n jupyterlab-infoboxes -y && conda activate jupyterlab-infoboxes`
-- install jupyterlab: `pip install jupyterlab==1.0.0` #`conda install jupyterlab`
+- install jupyterlab: `conda install -c conda-forge jupyterlab==1.0.1 -y`
 - `cp .env.template .env`
 
 ## Development
