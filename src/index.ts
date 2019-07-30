@@ -55,7 +55,7 @@ function createInfoBox(): Promise<Node> {
               // hack until I find a better event to call this on
               var infoBox = document.createElement("div");
               infoBox.className =
-                "jupyterlab-infoboxes p-Widget jp-Cell jp-CodeCell jp-RenderedHTMLCommon jp-RenderedMarkdown";
+                "jupyterlab-infoboxes p-Widget jp-RenderedHTMLCommon jp-RenderedMarkdown";
               infoBox.innerHTML = converter.makeHtml(markdown);
               infoBox.style.backgroundColor = "#edf4ff";
               infoBox.style.borderColor = "#0062ff";
@@ -72,7 +72,65 @@ function createInfoBox(): Promise<Node> {
 }
 
 function isEmptyNotebook(notebook: any): boolean {
+  console.log(`length: ${notebook.content.model.cells.length}`);
   return notebook.content.model.cells.length < 2;
+}
+
+function addInfoBoxToNotebook(notebook: any) {
+  if (notebook.node.classList.contains("has-jupyterlab-infoboxes")) {
+    console.log("already there");
+    return;
+  } else {
+    notebook.node.classList.add("has-jupyterlab-infoboxes");
+    createInfoBox().then(infoBox => {
+      // why wait until now to check if empty? b/c notebook isn't ready before?
+      // should rely on a real trigger, not just coincidental timing
+      if (isEmptyNotebook(notebook)) {
+        console.log("empty");
+        return;
+      }
+      console.log("created infobox");
+
+      var insertionPoint = Math.floor(
+        (<Element>notebook.node.childNodes[1]).children.length / 2
+      );
+      while (
+        insertionPoint <
+          (<Element>notebook.node.childNodes[1]).children.length &&
+        !cellIsATitle(
+          (<Element>notebook.node.childNodes[1]).children[insertionPoint]
+        )
+      ) {
+        insertionPoint++;
+      }
+      if (
+        insertionPoint ===
+        (<Element>notebook.node.childNodes[1]).children.length
+      ) {
+        console.log("put at beginning");
+        insertionPoint = 0; // display at the beginning by default if we couldn't find a good spot
+        console.log(<Element>notebook.node.childNodes[1]);
+        console.log(
+          (<Element>notebook.node.childNodes[1]).children[insertionPoint]
+        );
+        console.log(
+          (<Element>notebook.node.childNodes[1]).children[insertionPoint]
+            .firstChild
+        );
+
+        (<Element>(
+          (<Element>notebook.node.childNodes[1]).children[insertionPoint]
+            .children[0]
+        )).insertAdjacentElement("beforebegin", infoBox as Element);
+      } else {
+        console.log("found good insert spot");
+        // append to the inside of the title cell
+        (<Element>notebook.node.childNodes[1]).children[
+          insertionPoint
+        ].appendChild(infoBox);
+      }
+    });
+  }
 }
 
 /**
@@ -84,56 +142,17 @@ const extension: JupyterFrontEndPlugin<void> = {
   requires: [INotebookTracker],
   activate: (app: JupyterFrontEnd, notebookTracker: INotebookTracker) => {
     // on startup, notebooks may already be open
+    console.log("Infoboxes extension activated");
     notebookTracker.forEach(notebook => {
-      if (notebook.node.classList.contains("has-jupyterlab-infoboxes")) {
-        return;
-      } else {
-        notebook.node.classList.add("has-jupyterlab-infoboxes");
-        createInfoBox().then(infoBox => {
-          if (isEmptyNotebook(notebook)) {
-            return;
-          }
-          notebook.node.childNodes[1].appendChild(infoBox);
-        });
-      }
+      console.log("already open");
+      addInfoBoxToNotebook(notebook);
     });
 
     // handle new notebooks being opened
     notebookTracker.widgetAdded.connect(tracker => {
+      console.log("already open");
       tracker.forEach(notebook => {
-        if (notebook.node.classList.contains("has-jupyterlab-infoboxes")) {
-          return;
-        } else {
-          notebook.node.classList.add("has-jupyterlab-infoboxes");
-          createInfoBox().then(infoBox => {
-            if (isEmptyNotebook(notebook)) {
-              return;
-            }
-
-            var insertionPoint = Math.floor(
-              (<Element>notebook.node.childNodes[1]).children.length / 2
-            );
-            while (
-              insertionPoint <
-                (<Element>notebook.node.childNodes[1]).children.length &&
-              !cellIsATitle(
-                (<Element>notebook.node.childNodes[1]).children[insertionPoint]
-              )
-            ) {
-              insertionPoint++;
-            }
-            if (
-              insertionPoint ===
-              (<Element>notebook.node.childNodes[1]).children.length
-            ) {
-              insertionPoint = 0;
-            } // display at the beginning by default if we couldn't find a good spot
-            notebook.node.childNodes[1].insertBefore(
-              infoBox,
-              (<Element>notebook.node.childNodes[1]).children[insertionPoint]
-            );
-          });
-        }
+        addInfoBoxToNotebook(notebook);
       });
     });
   }
