@@ -72,13 +72,11 @@ function createInfoBox(): Promise<Node> {
 }
 
 function isEmptyNotebook(notebook: any): boolean {
-  console.log(`length: ${notebook.content.model.cells.length}`);
   return notebook.content.model.cells.length < 2;
 }
 
 function addInfoBoxToNotebook(notebook: any) {
   if (notebook.node.classList.contains("has-jupyterlab-infoboxes")) {
-    console.log("already there");
     return;
   } else {
     notebook.node.classList.add("has-jupyterlab-infoboxes");
@@ -86,10 +84,8 @@ function addInfoBoxToNotebook(notebook: any) {
       // why wait until now to check if empty? b/c notebook isn't ready before?
       // should rely on a real trigger, not just coincidental timing
       if (isEmptyNotebook(notebook)) {
-        console.log("empty");
         return;
       }
-      console.log("created infobox");
 
       var insertionPoint = Math.floor(
         (<Element>notebook.node.childNodes[1]).children.length / 2
@@ -107,23 +103,12 @@ function addInfoBoxToNotebook(notebook: any) {
         insertionPoint ===
         (<Element>notebook.node.childNodes[1]).children.length
       ) {
-        console.log("put at beginning");
         insertionPoint = 0; // display at the beginning by default if we couldn't find a good spot
-        console.log(<Element>notebook.node.childNodes[1]);
-        console.log(
-          (<Element>notebook.node.childNodes[1]).children[insertionPoint]
-        );
-        console.log(
-          (<Element>notebook.node.childNodes[1]).children[insertionPoint]
-            .firstChild
-        );
-
         (<Element>(
           (<Element>notebook.node.childNodes[1]).children[insertionPoint]
             .children[0]
         )).insertAdjacentElement("beforebegin", infoBox as Element);
       } else {
-        console.log("found good insert spot");
         // append to the inside of the title cell
         (<Element>notebook.node.childNodes[1]).children[
           insertionPoint
@@ -144,13 +129,11 @@ const extension: JupyterFrontEndPlugin<void> = {
     // on startup, notebooks may already be open
     console.log("Infoboxes extension activated");
     notebookTracker.forEach(notebook => {
-      console.log("already open");
       addInfoBoxToNotebook(notebook);
     });
 
     // handle new notebooks being opened
     notebookTracker.widgetAdded.connect(tracker => {
-      console.log("already open");
       tracker.forEach(notebook => {
         addInfoBoxToNotebook(notebook);
       });

@@ -1,6 +1,6 @@
 {
   "name": "@apset/jupyterlab-infoboxes",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Insert Infoboxes into Jupyter Notebooks",
   "keywords": [
     "jupyter",
