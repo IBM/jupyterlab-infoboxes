@@ -1,5 +1,5 @@
 {
-  "name": "@apset/jupyterlab-infoboxes",
+  "name": "jupyterlab-sn-infoboxes",
   "version": "1.0.2",
   "description": "Insert Infoboxes into Jupyter Notebooks",
   "keywords": [
@@ -7,18 +7,15 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.ibm.com/cognitive-class-labs/jupyterlab-infoboxes",
+  "homepage": "https://github.com/IBM/jupyterlab-infoboxes",
   "repository": {
     "type": "git",
-    "url": "https://github.ibm.com/cognitive-class-labs/jupyterlab-infoboxes.git"
+    "url": "https://github.com/IBM/jupyterlab-infoboxes.git"
   },
   "bugs": {
-    "url": "https://github.ibm.com/cognitive-class-labs/jupyterlab-infoboxes/issues"
+    "url": "https://github.com/IBM/jupyterlab-infoboxes/issues"
   },
-  "publishConfig": {
-    "registry": "https://na.artifactory.swg-devops.com/artifactory/api/npm/apset-npm/"
-  },
-  "license": "MIT",
+  "license": "Apache 2",
   "author": "James Reeve",
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
