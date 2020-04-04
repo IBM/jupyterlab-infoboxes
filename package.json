@@ -1,6 +1,6 @@
 {
   "name": "jupyterlab-sn-infoboxes",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Insert Infoboxes into Jupyter Notebooks",
   "keywords": [
     "jupyter",
@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/IBM/jupyterlab-infoboxes/issues"
   },
-  "license": "Apache 2",
+  "license": "Apache-2.0",
   "author": "James Reeve",
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
