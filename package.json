@@ -1,6 +1,6 @@
 {
   "name": "jupyterlab-sn-infoboxes",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "Insert Infoboxes into Jupyter Notebooks",
   "keywords": [
     "jupyter",
