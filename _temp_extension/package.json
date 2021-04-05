@@ -1,68 +1,52 @@
 {
   "name": "jupyterlab-sn-infoboxes",
-  "version": "3.0.0",
+  "version": "0.1.0",
   "description": "Insert Infoboxes into Jupyter Notebooks",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/IBM/jupyterlab-infoboxes",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/IBM/jupyterlab-infoboxes.git"
-  },
+  "homepage": "https://github.com/IBM/jupyterlab-infoboxes.git",
   "bugs": {
-    "url": "https://github.com/IBM/jupyterlab-infoboxes/issues"
+    "url": "https://github.com/IBM/jupyterlab-infoboxes.git/issues"
   },
-  "license": "Apache-2.0",
+  "license": "BSD-3-Clause",
   "author": {
     "name": "James Reeve",
-    "email": "james.reeve@ibm.com"
+    "email": ""
   },
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
-    "style/index.js"
+    "style/**/*.{css,.js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "directories": {
-    "lib": "lib/"
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IBM/jupyterlab-infoboxes.git.git"
   },
   "scripts": {
     "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
     "build:lib": "tsc",
-    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
     "clean": "jlpm run clean:lib",
-    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
-    "clean:labextension": "rimraf jupyterlab-sn-infoboxes/labextension",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:labextension": "rimraf jupyterlab-sn-infoboxes/labextension",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
     "eslint": "eslint . --ext .ts,.tsx --fix",
     "eslint:check": "eslint . --ext .ts,.tsx",
     "install:extension": "jupyter labextension develop --overwrite .",
-    "lint-travis": "travis lint .travis.yml",
-    "precommit": "lint-staged",
     "prepare": "jlpm run clean && jlpm run build:prod",
-    "prettier": "prettier --write '**/*{.ts,.tsx,.js,.jsx,.css,.json,.md}'",
-    "test": "echo 'no tests implemented'",
     "watch": "run-p watch:src watch:labextension",
-    "watch:labextension": "jupyter labextension watch .",
-    "watch:src": "tsc -w"
-  },
-  "lint-staged": {
-    "**/*{.ts,.tsx,.css,.json,.md}": [
-      "prettier --write",
-      "git add"
-    ]
+    "watch:src": "tsc -w",
+    "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyterlab/application": "^3.0.7",
-    "@jupyterlab/notebook": "^3.0.7",
-    "@types/showdown": "^1.9.2",
-    "showdown": "^1.9.0"
+    "@jupyterlab/application": "^3.0.0"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^3.0.0",
@@ -70,20 +54,19 @@
     "@typescript-eslint/parser": "^4.8.1",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^2.4.1",
-    "lint-staged": "^8.2.1",
+    "eslint-plugin-prettier": "^3.1.4", 
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.1",
     "rimraf": "^3.0.2",
-    "tslint": "^5.18.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "~4.1.3"
   },
-  "jupyterlab": {
+  "sideEffects": [
+    "style/*.css",
+    "style/index.js"
+  ],
+  "styleModule": "style/index.js",
+  "jupyterlab": { 
     "extension": true,
     "outputDir": "jupyterlab-sn-infoboxes/labextension"
-  },
-  "styleModule": "style/index.js"
+  }
 }
