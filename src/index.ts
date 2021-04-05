@@ -1,13 +1,13 @@
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
-} from "@jupyterlab/application";
+} from '@jupyterlab/application';
 
-import { INotebookTracker } from "@jupyterlab/notebook";
+import { INotebookTracker } from '@jupyterlab/notebook';
 
-import * as showdown from "showdown";
+import * as showdown from 'showdown';
 
-import "../style/index.css";
+import '../style/index.css';
 
 const converter = new showdown.Converter();
 
@@ -18,7 +18,7 @@ function cellIsATitle(cell: Element) {
   try {
     return (
       cell.children[1].children[1].children.length >= 3 &&
-      cell.children[1].children[1].children[2].innerHTML.startsWith("<h")
+      cell.children[1].children[1].children[2].innerHTML.startsWith('<h')
     );
   } catch (err) {
     return false;
@@ -28,7 +28,7 @@ function cellIsATitle(cell: Element) {
 function createInfoBox(): Promise<Node> {
   return new Promise((resolve, reject) => {
     fetch(
-      "https://api.github.com/repos/cognitive-class/jupyterlab-infobox-content/contents/infoboxes"
+      'https://api.github.com/repos/cognitive-class/jupyterlab-infobox-content/contents/infoboxes'
     )
       .then(response => {
         if (!response.ok) {
@@ -42,7 +42,7 @@ function createInfoBox(): Promise<Node> {
         if (randomInfobox && randomInfobox.download_url) {
           return randomInfobox.download_url;
         } else {
-          reject("failed to fetch infobox.");
+          reject('failed to fetch infobox.');
         }
       })
       .then(url => {
@@ -53,14 +53,14 @@ function createInfoBox(): Promise<Node> {
           .then(markdown => {
             setTimeout(() => {
               // hack until I find a better event to call this on
-              var infoBox = document.createElement("div");
+              const infoBox = document.createElement('div');
               infoBox.className =
-                "jupyterlab-infoboxes p-Widget jp-RenderedHTMLCommon jp-RenderedMarkdown";
+                'jupyterlab-infoboxes p-Widget jp-RenderedHTMLCommon jp-RenderedMarkdown';
               infoBox.innerHTML = converter.makeHtml(markdown);
-              infoBox.style.backgroundColor = "#edf4ff";
-              infoBox.style.borderColor = "#0062ff";
-              infoBox.style.borderWidth = "2px";
-              infoBox.style.borderStyle = "solid";
+              infoBox.style.backgroundColor = '#edf4ff';
+              infoBox.style.borderColor = '#0062ff';
+              infoBox.style.borderWidth = '2px';
+              infoBox.style.borderStyle = 'solid';
               resolve(infoBox);
             }, 300);
           });
@@ -76,10 +76,10 @@ function isEmptyNotebook(notebook: any): boolean {
 }
 
 function addInfoBoxToNotebook(notebook: any) {
-  if (notebook.node.classList.contains("has-jupyterlab-infoboxes")) {
+  if (notebook.node.classList.contains('has-jupyterlab-infoboxes')) {
     return;
   } else {
-    notebook.node.classList.add("has-jupyterlab-infoboxes");
+    notebook.node.classList.add('has-jupyterlab-infoboxes');
     createInfoBox().then(infoBox => {
       // why wait until now to check if empty? b/c notebook isn't ready before?
       // should rely on a real trigger, not just coincidental timing
@@ -107,7 +107,7 @@ function addInfoBoxToNotebook(notebook: any) {
         (<Element>(
           (<Element>notebook.node.childNodes[1]).children[insertionPoint]
             .children[0]
-        )).insertAdjacentElement("beforebegin", infoBox as Element);
+        )).insertAdjacentElement('beforebegin', infoBox as Element);
       } else {
         // append to the inside of the title cell
         (<Element>notebook.node.childNodes[1]).children[
@@ -122,12 +122,12 @@ function addInfoBoxToNotebook(notebook: any) {
  * Initialization data for the jupyterlab-infoboxes extension.
  */
 const extension: JupyterFrontEndPlugin<void> = {
-  id: "jupyterlab-infoboxes",
+  id: 'jupyterlab-infoboxes',
   autoStart: true,
   requires: [INotebookTracker],
   activate: (app: JupyterFrontEnd, notebookTracker: INotebookTracker) => {
     // on startup, notebooks may already be open
-    console.log("Infoboxes extension activated");
+    console.log('Infoboxes extension activated');
     notebookTracker.forEach(notebook => {
       addInfoBoxToNotebook(notebook);
     });
